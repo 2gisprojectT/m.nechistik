@@ -4,53 +4,35 @@ __author__ = 'mikhailnecistik'
 class Lion:
     # Constructor
     def __init__(self):
-        self.Lion_status = {'fed': 'сытый', 'hungry': 'голодный'}
         # Initially Lion is always hungry
-        self.set_cur_status('hungry')
+        self.Lion_status = 'голодный'
+        self.Lion_action = {('антилопа', 'сытый'): ('спать, и переходит в состояние голодный', 'голодный'),
+                            ('охотник', 'сытый'): ('убежать от охотника, и переходит в состояние голодный', 'голодный'),
+                            ('дерево', 'сытый'): ('смотреть на дерево, и переходит в состояние голодный','голодный'),
 
-    # set current Lion status
-    def set_cur_status(self, stat):
-        self.cur_status = self.Lion_status[stat]
+                            ('антилопа', 'голодный'): ('съесть антилопу, и переходит в состояние сытый', 'сытый'),
+                            ('охотник', 'голодный'): ('убежать от охотника, и остаётся голодным', 'голодный'),
+                            ('дерево', 'голодный'): ('спать в тени дерева, и остаётся голодным', 'голодный')}
+
+
 
     # get current Lion status
-    def get_cur_status(self):
-        return self.cur_status
+    def get_status(self):
+        return self.Lion_status
 
-
-# Class containing dict for Lion actions
-class Action:
-    # Constructor
-    def __init__(self):
-        self.Lion_fed = {'антилопа': 'спать, и переходит в состояние голодный', 'охотник': 'убежать от охотника, и переходит в состояние голодный','дерево': 'смотреть на дерево, и переходит в состояние голодный'}
-        self.Lion_hungry = {'антилопа': 'съесть антилопу, и переходит в состояние сытый', 'охотник': 'убежать от охотника, и остаётся голодным','дерево': 'спать в тени дерева, и остаётся голодным'}
-        self.Lion_status_act = {'голодный': self.Lion_hungry, 'сытый': self.Lion_fed}
-
-    # get action for Lion
-    def get_action(self, stat, text):
-        return self.Lion_status_act[stat][text]
-
-# Class containing dict for change Lion status
-class Change:
-    # Constructor
-    def __init__(self):
-        self.change_fed = {'антилопа': 'hungry', 'охотник': 'hungry','дерево': 'hungry'}
-        self.change_hungry = {'антилопа': 'fed', 'охотник': 'hungry','дерево': 'hungry'}
-        self.change_Lion = {'голодный': self.change_hungry, 'сытый': self.change_fed}
-
-    # change Lion current status
-    def ch_lion(self, L, text):
-        L.set_cur_status(self.change_Lion[L.get_cur_status()][text])
+    def get_action(self, text):
+        buf = self.Lion_action[(text, self.Lion_status)][0]
+        self.Lion_status = self.Lion_action[(text, self.Lion_status)][1]
+        return buf
 
 if __name__ == '__main__':
 
     # Initialization
     L = Lion()
-    A = Action()
-    C = Change()
 
     while True:
         print('\n')
-        print('Сейчас лев '+ L.get_cur_status() + '!')
+        print('Сейчас лев '+ L.get_status() + '!')
         print('Выберите один из следующих объектов: антилопа, охотник, дерево')
         print('Если вам наскучил лев, вы всегда можете выйти: выход')
         print('Введите объект: ')
@@ -62,7 +44,6 @@ if __name__ == '__main__':
         else:
             # For wrong data
             try:
-                print('Лев решает ' + A.get_action(L.get_cur_status(),text))
-                C.ch_lion(L, text)
+                print('Лев решает ' + L.get_action(text))
             except:
                 print('Ошибка: Лев не знает что делать!')
