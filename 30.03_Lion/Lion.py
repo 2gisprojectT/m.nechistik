@@ -3,16 +3,10 @@ __author__ = 'mikhailnecistik'
 # Class containing dict for Lion status
 class Lion:
     # Constructor
-    def __init__(self):
+    def __init__(self, Lion_action, Lion_status):
         # Initially Lion is always hungry
-        self.Lion_status = 'голодный'
-        self.Lion_action = {('антилопа', 'сытый'): ('спать, и переходит в состояние', 'голодный'),
-                            ('охотник', 'сытый'): ('убежать от охотника, и переходит в состояние', 'голодный'),
-                            ('дерево', 'сытый'): ('смотреть на дерево, и переходит в состояние', 'голодный'),
-
-                            ('антилопа', 'голодный'): ('съесть антилопу, и переходит в состояние', 'сытый'),
-                            ('охотник', 'голодный'): ('убежать от охотника, и остаётся', 'голодный'),
-                            ('дерево', 'голодный'): ('спать в тени дерева, и остаётся', 'голодный')}
+        self.Lion_status = Lion_status
+        self.Lion_action = Lion_action
 
 
 
@@ -20,15 +14,27 @@ class Lion:
     def get_status(self):
         return self.Lion_status
 
-    def get_action(self, text):
-        buf = self.Lion_action[(text, self.Lion_status)][0]
+    def set_status(self, text):
         self.Lion_status = self.Lion_action[(text, self.Lion_status)][1]
-        return buf
+
+
+    def get_action(self, text):
+        return self.Lion_action[(text, self.Lion_status)][0]
+
 
 if __name__ == '__main__':
 
     # Initialization
-    L = Lion()
+    Lion_action = {('антилопа', 'сытый'): ('спать, и переходит в состояние голодный', 'голодный'),
+                            ('охотник', 'сытый'): ('убежать от охотника, и переходит в состояние голодный', 'голодный'),
+                            ('дерево', 'сытый'): ('смотреть на дерево, и переходит в состояние голодный', 'голодный'),
+
+                            ('антилопа', 'голодный'): ('съесть антилопу, и переходит в состояние сытый', 'сытый'),
+                            ('охотник', 'голодный'): ('убежать от охотника, и остаётся голодным', 'голодный'),
+                            ('дерево', 'голодный'): ('спать в тени дерева, и остаётся голодным', 'голодный')}
+
+    Lion_status = 'голодный'
+    L = Lion(Lion_action, Lion_status)
 
     while True:
         print('\n')
@@ -44,6 +50,11 @@ if __name__ == '__main__':
         else:
             # For wrong data
             try:
-                print('Лев решает ' + L.get_action(text) + ' ' + L.get_status() + '!')
+                print('Лев решает ' + L.get_action(text))
+                L.set_status(text)
             except:
                 print('Ошибка: Лев не знает что делать!')
+
+
+
+
